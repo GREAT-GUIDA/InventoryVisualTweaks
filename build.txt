@@ -1,0 +1,6 @@
+displayName = Inventory & Items Visual Tweaks (背包&物品特效)
+author = Guida
+version = 0.1
+hideCode = false
+hideResources = false
+side = Client

@@ -1,0 +1,410 @@
+DisplayName: Inventory Visual Tweaks
+Description: Client-side inventory slot visuals, item borders, and world item effects.
+
+Configs: {
+	InventoryBackColorConfig: {
+		DisplayName: Slot Colors
+
+		EnableInventoryBackColorsOverride: {
+			Label: Override Slot Back Colors
+			Tooltip: ""
+		}
+
+		InventoryBackColorsIntensity: {
+			Label: Slot Back Color Intensity
+			Tooltip: Multiplier when Override Slot Back Colors is enabled.
+		}
+
+		EnableEmptySlotTransparency: {
+			Label: Empty Slot Transparency
+			Tooltip: ""
+		}
+
+		SlotBackColors: {
+			Label: Slot Back Colors
+			Tooltip: ""
+		}
+
+		EnableItemBackColor: {
+			Label: Item Back Color
+			Tooltip: ""
+		}
+
+		ItemBackColorBased: {
+			Label: Item Back Color Based
+			Tooltip: ""
+		}
+
+		DoNotUseItemBackColorIfRarityIsLessThan: {
+			Label: Min Rarity For Item Back Color
+			Tooltip: -1 disables the rarity filter.
+		}
+	}
+
+	SlotBackColorsConfig: {
+		DisplayName: Slot Back Colors
+
+		InventoryColor: {
+			Label: Inventory Color
+			Tooltip: ""
+		}
+
+		HotbarColor: {
+			Label: Hotbar Color
+			Tooltip: Bottom hotbar while the inventory is closed.
+		}
+
+		HotbarOpenInventoryColor: {
+			Label: Hotbar Open Inventory Color
+			Tooltip: First inventory row (hotbar slots 1-0) while the inventory is open.
+		}
+
+		HighlightedSlotColor: {
+			Label: Highlighted Slot Color
+			Tooltip: Hovered housing slots and temporary crafting-material highlights. Not the closed-hotbar selection frame.
+		}
+
+		NewItemHighlightColor: {
+			Label: New Item Highlight Color
+			Tooltip: ""
+		}
+
+		TrashSlotColor: {
+			Label: Trash Slot Color
+			Tooltip: ""
+		}
+
+		EquipmentColor: {
+			Label: Equipment Color
+			Tooltip: ""
+		}
+
+		VanityColor: {
+			Label: Vanity Color
+			Tooltip: ""
+		}
+
+		DyeColor: {
+			Label: Dye Color
+			Tooltip: ""
+		}
+
+		MiscEquipmentColor: {
+			Label: Misc Equipment Color
+			Tooltip: ""
+		}
+
+		MiscVanityColor: {
+			Label: Misc Vanity Color
+			Tooltip: ""
+		}
+
+		MiscDyeColor: {
+			Label: Misc Dye Color
+			Tooltip: ""
+		}
+
+		PiggyBankColor: {
+			Label: Piggy Bank Color
+			Tooltip: ""
+		}
+
+		ChestColor: {
+			Label: Chest Color
+			Tooltip: ""
+		}
+
+		NPCInteractionColor: {
+			Label: NPC Interaction Color
+			Tooltip: ""
+		}
+
+		ShopColor: {
+			Label: Shop Color
+			Tooltip: ""
+		}
+
+		CraftingColor: {
+			Label: Crafting Color
+			Tooltip: ""
+		}
+
+		JourneyInfiniteColor: {
+			Label: Journey Infinite Color
+			Tooltip: ""
+		}
+
+		OtherColor: {
+			Label: Other Color
+			Tooltip: ""
+		}
+	}
+
+	InventoryInteractionConfig: {
+		DisplayName: Item Interaction
+
+		EnableSlotTransferMotion: {
+			Label: Slot Transfer Motion
+			Tooltip: ""
+		}
+
+		EnableMouseItemMotion: {
+			Label: Mouse Item Motion
+			Tooltip: ""
+		}
+
+		EnableHoverScale: {
+			Label: Hover Scale
+			Tooltip: ""
+		}
+
+		HoverScaleAmount: {
+			Label: Hover Scale Amount
+			Tooltip: ""
+		}
+
+		PickupFlashIntensity: {
+			Label: Pickup Flash Intensity
+			Tooltip: 0 disables.
+		}
+
+		NewItemEffectIntensity: {
+			Label: New Item Effect Intensity
+			Tooltip: 0 disables.
+		}
+
+		ItemIconOutlineIntensity: {
+			Label: Item Icon Outline Intensity
+			Tooltip: 0 disables.
+		}
+
+		EnableHotbarRarityName: {
+			Label: Hotbar Rarity Name Color
+			Tooltip: Colors the selected hotbar item name using item rarity.
+		}
+
+		EnableOpenInventoryHotbarHighlight: {
+			Label: Open Inventory Hotbar Highlight
+			Tooltip: Draws the vanilla white selection frame on the selected hotbar slot while the inventory is open.
+		}
+
+		OpenInventoryHotbarHighlightOpacity: {
+			Label: Open Inventory Hotbar Highlight Opacity
+			Tooltip: 0 disables.
+		}
+
+		EnableUseCooldownMask: {
+			Label: Use Cooldown Mask
+			Tooltip: Shows a top-to-bottom clearing mask on the selected hotbar slot while the item is in use or on reuse delay.
+		}
+
+		UseCooldownMaskOpacity: {
+			Label: Use Cooldown Mask Opacity
+			Tooltip: 0 disables.
+		}
+
+		UseCooldownMaskOnAllHotbarSlots: {
+			Label: Use Cooldown Mask On All Hotbar Slots
+			Tooltip: While an item is in use, apply the cooldown mask to every hotbar slot instead of only the selected one.
+		}
+	}
+
+	InventoryBorderConfig: {
+		DisplayName: Item Border
+
+		EnableBorder: {
+			Label: Enable Border
+			Tooltip: ""
+		}
+
+		BorderColorBased: {
+			Label: Border Color Based
+			Tooltip: ""
+		}
+
+		BorderOpacity: {
+			Label: Border Opacity
+			Tooltip: ""
+		}
+
+		BorderSaturation: {
+			Label: Border Saturation
+			Tooltip: ""
+		}
+
+		DoNotUseBorderIfRarityIsLessThan: {
+			Label: Min Rarity For Border
+			Tooltip: -1 disables the rarity filter.
+		}
+
+		AdaptiveBorderOrRectangleBorder: {
+			Label: Adaptive Border Shape
+			Tooltip: ""
+		}
+
+		BorderWidth: {
+			Label: Border Width
+			Tooltip: ""
+		}
+
+		EnableOutline: {
+			Label: Inner Outline
+			Tooltip: ""
+		}
+
+		OutlineBrightness: {
+			Label: Inner Outline Brightness
+			Tooltip: ""
+		}
+
+		EnableCornerFrame: {
+			Label: Corner Frame
+			Tooltip: ""
+		}
+
+		CornerFrameWidth: {
+			Label: Corner Frame Width
+			Tooltip: ""
+		}
+
+		UnderlineHeight: {
+			Label: Underline Height
+			Tooltip: 0 disables.
+		}
+
+		AbovelineHeight: {
+			Label: Aboveline Height
+			Tooltip: 0 disables.
+		}
+	}
+
+	DrawItemInWorldConfig: {
+		DisplayName: World Item Visuals
+
+		Headers: {
+			OutlineSettings: Outline
+			LusterSettings: Luster
+			TrailSettings: Trail
+			ItemGlowSettings: Item Glow
+			StackCountSettings: Stack Count
+		}
+
+		EnableOutline: {
+			Label: Enable Outline
+			Tooltip: Dropped world items only. Not inventory item borders.
+		}
+
+		OutlineColorBased: {
+			Label: Outline Color Based
+			Tooltip: ""
+		}
+
+		OutLineHighlight: {
+			Label: Outline Highlight
+			Tooltip: Dark base pass so the outline stays visible in daylight.
+		}
+
+		OutlineIntensity: {
+			Label: Outline Intensity
+			Tooltip: ""
+		}
+
+		EnableLuster: {
+			Label: Enable Luster
+			Tooltip: ""
+		}
+
+		LusterColorBased: {
+			Label: Luster Color Based
+			Tooltip: ""
+		}
+
+		LusterIntensity: {
+			Label: Luster Intensity
+			Tooltip: ""
+		}
+
+		EnableTrail: {
+			Label: Enable Trail
+			Tooltip: ""
+		}
+
+		TrailColorBased: {
+			Label: Trail Color Based
+			Tooltip: ""
+		}
+
+		TrailIntensity: {
+			Label: Trail Intensity
+			Tooltip: ""
+		}
+
+		TrailScaleWithRarity: {
+			Label: Scale Trail With Rarity
+			Tooltip: ""
+		}
+
+		EnableItemGlow: {
+			Label: Enable Item Glow
+			Tooltip: ""
+		}
+
+		ItemGlowIntensity: {
+			Label: Item Glow Intensity
+			Tooltip: ""
+		}
+
+		ItemGlowStyle: {
+			Label: Glow Style
+			Tooltip: ""
+		}
+
+		ItemGlowScaleWithRarity: {
+			Label: Scale Glow With Rarity
+			Tooltip: ""
+		}
+
+		EnableExtraParticles: {
+			Label: Enable Extra Particles
+			Tooltip: ""
+		}
+
+		EnableStackCount: {
+			Label: Show Stack Count
+			Tooltip: ""
+		}
+	}
+
+	UseColor: {
+		Tooltip: ""
+
+		TypeColor: {
+			Label: Type Color
+			Tooltip: ""
+		}
+
+		RarityColor: {
+			Label: Rarity Color
+			Tooltip: ""
+		}
+
+		White: {
+			Label: White
+			Tooltip: ""
+		}
+	}
+
+	ItemGlowStyle: {
+		Tooltip: ""
+
+		Normal: {
+			Label: Normal
+			Tooltip: ""
+		}
+
+		Fancy: {
+			Label: Fancy
+			Tooltip: ""
+		}
+	}
+}

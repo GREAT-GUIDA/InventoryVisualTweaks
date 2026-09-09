@@ -1,0 +1,33 @@
+纯客户端的物品视觉优化mod，我懒得写具体加了啥了，看gif吧↓
+
+[img]在此粘贴你的 GIF 图片链接[/img]
+
+所有效果都完全可开关可调整，如果有哪个细节你想调整而调整不了可以告诉我让我加。
+
+物品边框的颜色与样式可以在设置中调整以及自适应材质包。
+
+呃对我知道以前也有人做过类似的东西，比如：
+
+[list]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2763158325]ArmamentDisplay[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3368436589]Naka's Inventory Tweaks[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3478873966]Fix Hotbar Item Name[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3678702962]Immersive Inventory (Better HUD Visuals)[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2847872897]Loot Beams[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2884802891]Rarity Borders[/url]
+[*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2887468886]Better Rarity Borders[/url]
+[/list]
+
+而且我确实参考过其中一些效果。但我做这个mod主要是因为我不想一次开一堆零散的视觉mod，而且它们叠在一起观感也不统一。
+
+它们中的很多也增加了不必要的内容，有的不是纯客户端，有的缺少配置，Naka's Inventory Tweaks甚至会在我每次重载mod时闪退。
+
+所以我才按照我自己的喜好做了一个物品视觉优化的整合mod。
+
+事实上，我有一个更大规模的视觉调整mod，但那个mod可能还要很长时间才能做完，我还是先发布这个mod吧。
+
+我的QQ群：1047902679
+
+我的Discord server：https://discord.gg/KV4zUXDpKY
+
+此mod开源。[url=在此粘贴 GitHub 链接]源码[/url]
