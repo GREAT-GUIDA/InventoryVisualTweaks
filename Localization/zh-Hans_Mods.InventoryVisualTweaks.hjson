@@ -1,0 +1,449 @@
+DisplayName: 背包视觉优化
+Description: 客户端背包格子视觉、物品边框与地面掉落物特效。
+
+Configs: {
+	InventoryBackColorConfig: {
+		DisplayName: 格子颜色
+
+		EnableInventoryBackColorsOverride: {
+			Label: 覆盖格子背景色
+			Tooltip: ""
+		}
+
+		InventoryBackColorsIntensity: {
+			Label: 格子背景色强度
+			Tooltip: 启用「覆盖格子背景色」时的颜色倍率。
+		}
+
+		EnableEmptySlotTransparency: {
+			Label: 空格子半透明
+			Tooltip: ""
+		}
+
+		SlotBackColors: {
+			Label: 格子背景色
+			Tooltip: ""
+		}
+
+		EnableItemBackColor: {
+			Label: 物品背景色
+			Tooltip: ""
+		}
+
+		ItemBackColorBased: {
+			Label: 物品背景色依据
+			Tooltip: ""
+		}
+
+		DoNotUseItemBackColorIfRarityIsLessThan: {
+			Label: 物品背景色最低稀有度
+			Tooltip: 设为 -1 关闭稀有度过滤。
+		}
+	}
+
+	SlotBackColorsConfig: {
+		DisplayName: 格子背景色
+
+		InventoryColor: {
+			Label: 背包颜色
+			Tooltip: ""
+		}
+
+		HotbarColor: {
+			Label: 快捷栏颜色
+			Tooltip: 关闭背包时底部快捷栏。
+		}
+
+		HotbarOpenInventoryColor: {
+			Label: 打开背包时快捷栏颜色
+			Tooltip: 打开背包时第一行（快捷栏 1–0 格）。
+		}
+
+		HighlightedSlotColor: {
+			Label: 高亮格子颜色
+			Tooltip: 悬停的房屋格子与临时合成材料高亮。不是关闭背包时的选中框。
+		}
+
+		NewItemHighlightColor: {
+			Label: 新物品高亮颜色
+			Tooltip: ""
+		}
+
+		TrashSlotColor: {
+			Label: 垃圾桶颜色
+			Tooltip: ""
+		}
+
+		EquipmentColor: {
+			Label: 装备栏颜色
+			Tooltip: ""
+		}
+
+		VanityColor: {
+			Label: 时装栏颜色
+			Tooltip: ""
+		}
+
+		DyeColor: {
+			Label: 染料栏颜色
+			Tooltip: ""
+		}
+
+		MiscEquipmentColor: {
+			Label: 杂项装备颜色
+			Tooltip: ""
+		}
+
+		MiscVanityColor: {
+			Label: 杂项时装颜色
+			Tooltip: ""
+		}
+
+		MiscDyeColor: {
+			Label: 杂项染料颜色
+			Tooltip: ""
+		}
+
+		PiggyBankColor: {
+			Label: 猪猪存钱罐颜色
+			Tooltip: ""
+		}
+
+		ChestColor: {
+			Label: 箱子颜色
+			Tooltip: ""
+		}
+
+		NPCInteractionColor: {
+			Label: NPC 交互颜色
+			Tooltip: ""
+		}
+
+		ShopColor: {
+			Label: 商店颜色
+			Tooltip: ""
+		}
+
+		CraftingColor: {
+			Label: 合成颜色
+			Tooltip: ""
+		}
+
+		JourneyInfiniteColor: {
+			Label: 旅途无限物品颜色
+			Tooltip: ""
+		}
+
+		OtherColor: {
+			Label: 其他颜色
+			Tooltip: ""
+		}
+	}
+
+	InventoryInteractionConfig: {
+		DisplayName: 物品交互
+
+		EnableSlotTransferMotion: {
+			Label: 格子转移缓动
+			Tooltip: ""
+		}
+
+		EnableMouseItemMotion: {
+			Label: 鼠标物品缓动
+			Tooltip: ""
+		}
+
+		EnableHoverScale: {
+			Label: 悬停缩放
+			Tooltip: ""
+		}
+
+		HoverScaleAmount: {
+			Label: 悬停缩放量
+			Tooltip: ""
+		}
+
+		PickupFlashIntensity: {
+			Label: 拾取闪光强度
+			Tooltip: 设为 0 关闭。
+		}
+
+		NewItemEffectIntensity: {
+			Label: 新物品特效强度
+			Tooltip: 设为 0 关闭。
+		}
+
+		EnableHotbarRarityName: {
+			Label: 快捷栏稀有度名称着色
+			Tooltip: 按物品稀有度为当前选中快捷栏物品名称上色。
+		}
+
+		EnableOpenInventoryHotbarHighlight: {
+			Label: 打开背包时快捷栏高亮
+			Tooltip: 打开背包时，为当前选中的快捷栏格子绘制原版白色选中框。
+		}
+
+		OpenInventoryHotbarHighlightOpacity: {
+			Label: 打开背包时快捷栏高亮不透明度
+			Tooltip: 设为 0 关闭。
+		}
+
+		EnableUseCooldownMask: {
+			Label: 使用冷却遮罩
+			Tooltip: 物品使用中或 reuse delay 期间，在快捷栏格子上显示自上向下消退的遮罩。
+		}
+
+		UseCooldownMaskOpacity: {
+			Label: 使用冷却遮罩不透明度
+			Tooltip: 设为 0 关闭。
+		}
+
+		UseCooldownMaskOnAllHotbarSlots: {
+			Label: 冷却遮罩应用于全部快捷栏
+			Tooltip: 物品使用中时，为所有快捷栏格子显示冷却遮罩，而非仅当前选中格。
+		}
+
+		EnableTooltipFade: {
+			Label: 悬停提示淡入淡出
+			Tooltip: 提示框背景与文字淡入淡出。背景淡入淡出需开启原版「提示框不透明背景」设置。
+		}
+
+		TooltipFadeInDuration: {
+			Label: 提示淡入时长
+			Tooltip: 淡入所用帧数，数值越大越慢。
+		}
+
+		TooltipFadeOutDuration: {
+			Label: 提示淡出时长
+			Tooltip: 淡出所用帧数，数值越大越慢。
+		}
+
+		EnableHeldItemTooltipOffsetEase: {
+			Label: 手持物品提示框偏移缓动
+			Tooltip: 拿起物品时平滑右移提示框，而不是原版瞬间偏移 34 像素。
+		}
+
+		HeldItemTooltipOffsetDuration: {
+			Label: 手持物品提示框偏移时长
+			Tooltip: 偏移缓动所用帧数，数值越大越慢。
+		}
+	}
+
+	InventoryBorderConfig: {
+		DisplayName: 物品边框
+
+		Headers: {
+			ItemIconOutlineSettings: 物品图标描边
+		}
+
+		EnableBorder: {
+			Label: 启用边框
+			Tooltip: ""
+		}
+
+		BorderColorBased: {
+			Label: 边框颜色依据
+			Tooltip: ""
+		}
+
+		BorderOpacity: {
+			Label: 边框不透明度
+			Tooltip: ""
+		}
+
+		BorderSaturation: {
+			Label: 边框饱和度
+			Tooltip: ""
+		}
+
+		DoNotUseBorderIfRarityIsLessThan: {
+			Label: 边框最低稀有度
+			Tooltip: 设为 -1 关闭稀有度过滤。
+		}
+
+		AdaptiveBorderOrRectangleBorder: {
+			Label: 自适应边框形状
+			Tooltip: ""
+		}
+
+		BorderWidth: {
+			Label: 边框宽度
+			Tooltip: ""
+		}
+
+		EnableOutline: {
+			Label: 内描边
+			Tooltip: ""
+		}
+
+		OutlineBrightness: {
+			Label: 内描边亮度
+			Tooltip: ""
+		}
+
+		ItemIconOutlineIntensity: {
+			Label: 物品图标描边强度
+			Tooltip: 背包物品图标周围的彩色偏移描边。设为 0 关闭。
+		}
+
+		DoNotUseItemIconOutlineIfRarityIsLessThan: {
+			Label: 物品图标描边最低稀有度
+			Tooltip: 设为 -1 关闭稀有度过滤。
+		}
+
+		EnableCornerFrame: {
+			Label: 角框
+			Tooltip: ""
+		}
+
+		CornerFrameWidth: {
+			Label: 角框宽度
+			Tooltip: ""
+		}
+
+		UnderlineHeight: {
+			Label: 下划线高度
+			Tooltip: 设为 0 关闭。
+		}
+
+		AbovelineHeight: {
+			Label: 上划线高度
+			Tooltip: 设为 0 关闭。
+		}
+	}
+
+	DrawItemInWorldConfig: {
+		DisplayName: 地面物品视觉
+
+		DoNotUseWorldEffectsIfRarityIsLessThan: {
+			Label: 地面效果最低稀有度
+			Tooltip: 设为 -1 关闭稀有度过滤。
+		}
+
+		Headers: {
+			OutlineSettings: 描边
+			LusterSettings: 光泽
+			TrailSettings: 拖尾
+			ItemGlowSettings: 物品光晕
+			StackCountSettings: 堆叠数量
+		}
+
+		EnableOutline: {
+			Label: 启用描边
+			Tooltip: 仅作用于地面掉落物，不影响背包物品边框。
+		}
+
+		OutlineColorBased: {
+			Label: 描边颜色依据
+			Tooltip: ""
+		}
+
+		OutLineHighlight: {
+			Label: 描边高亮
+			Tooltip: 叠加暗色底，使白天环境下描边仍清晰可见。
+		}
+
+		OutlineIntensity: {
+			Label: 描边强度
+			Tooltip: ""
+		}
+
+		EnableLuster: {
+			Label: 启用光泽
+			Tooltip: ""
+		}
+
+		LusterColorBased: {
+			Label: 光泽颜色依据
+			Tooltip: ""
+		}
+
+		LusterIntensity: {
+			Label: 光泽强度
+			Tooltip: ""
+		}
+
+		EnableTrail: {
+			Label: 启用拖尾
+			Tooltip: ""
+		}
+
+		TrailColorBased: {
+			Label: 拖尾颜色依据
+			Tooltip: ""
+		}
+
+		TrailIntensity: {
+			Label: 拖尾强度
+			Tooltip: ""
+		}
+
+		TrailScaleWithRarity: {
+			Label: 拖尾随稀有度缩放
+			Tooltip: ""
+		}
+
+		EnableItemGlow: {
+			Label: 启用物品光晕
+			Tooltip: ""
+		}
+
+		ItemGlowIntensity: {
+			Label: 物品光晕强度
+			Tooltip: ""
+		}
+
+		ItemGlowStyle: {
+			Label: 光晕样式
+			Tooltip: ""
+		}
+
+		ItemGlowScaleWithRarity: {
+			Label: 光晕随稀有度缩放
+			Tooltip: ""
+		}
+
+		EnableExtraParticles: {
+			Label: 启用额外粒子
+			Tooltip: ""
+		}
+
+		EnableStackCount: {
+			Label: 显示堆叠数量
+			Tooltip: ""
+		}
+	}
+
+	UseColor: {
+		Tooltip: ""
+
+		TypeColor: {
+			Label: 类型颜色
+			Tooltip: ""
+		}
+
+		RarityColor: {
+			Label: 稀有度颜色
+			Tooltip: ""
+		}
+
+		White: {
+			Label: 白色
+			Tooltip: ""
+		}
+	}
+
+	ItemGlowStyle: {
+		Tooltip: ""
+
+		Normal: {
+			Label: 普通
+			Tooltip: ""
+		}
+
+		Fancy: {
+			Label: 华丽
+			Tooltip: ""
+		}
+	}
+}

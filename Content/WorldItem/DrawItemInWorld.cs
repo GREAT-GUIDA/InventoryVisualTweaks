@@ -16,6 +16,9 @@ namespace InventoryVisualTweaks.Content.WorldItem {
                 return base.PreDrawInWorld(item, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI);
 
             var config = ModContent.GetInstance<DrawItemInWorldConfig>();
+            if (!config.MeetsMinRarity(item))
+                return base.PreDrawInWorld(item, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI);
+
             if (!config.EnableOutline)
                 return base.PreDrawInWorld(item, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI);
 
@@ -48,9 +51,12 @@ namespace InventoryVisualTweaks.Content.WorldItem {
             if (item.IsAir || string.IsNullOrEmpty(item.Name))
                 return;
             
+            var config = ModContent.GetInstance<DrawItemInWorldConfig>();
+            if (!config.MeetsMinRarity(item))
+                return;
+
             DrawItemSpawnFlash(item, spriteBatch, rotation, scale, whoAmI);
 
-            var config = ModContent.GetInstance<DrawItemInWorldConfig>();
             if (config.EnableLuster) {
                 if (TryGetItemDrawData(item, rotation, scale, out var texture, out var frame, out var position, out _)) {
                     Color effectColor = WorldItemEffectColorHelper.ForLuster(

@@ -1,0 +1,31 @@
+A purely client-side item visual tweaks mod. I'm too lazy to write out exactly what it adds—see the GIFs below↓
+
+[img]https://i.imgur.com/XeplOd6.gif[/img]
+
+[img]https://i.imgur.com/Z4TgnFI.gif[/img]
+
+[img]https://i.imgur.com/gwmNJgM.gif[/img]
+
+All effects are fully toggleable and adjustable. If there's some detail you want to adjust but can't, let me know and I'll add it.
+
+Item border colors and styles can be adjusted in settings and also adapt to texture packs.
+
+
+-----
+
+
+Uh, I know similar mods have been done before, for example:
+
+[list] [][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2763158325]ArmamentDisplay[/url] [][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3368436589]Naka's Inventory Tweaks[/url] [][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3478873966]Fix Hotbar Item Name[/url] [][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3678702962]Immersive Inventory (Better HUD Visuals)[/url] [][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2847872897]Loot Beams[/url] [][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2884802891]Rarity Borders[/url] [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2887468886]Better Rarity Borders[/url] [/list]
+
+And I did reference some of those effects. But I made this mod mainly because I don't want to enable a bunch of scattered visual mods at once, and they don't look unified when stacked together.
+
+Many of them also add unnecessary stuff. Some aren't purely client-side, some lack configuration, and Naka's Inventory Tweaks even crashes on me every time I reload mods.
+
+So I made an integrated item visual tweaks mod to my own taste.
+
+Actually, I have a larger-scale visual tweaks mod, but that one might still take a long time to finish, so I'm releasing this mod first.
+
+[b]My Discord server[/b]: https://discord.gg/KV4zUXDpKY
+
+[b]This mod is open source.[/b] [url=https://github.com/GREAT-GUIDA/InventoryVisualTweaks]Source code[/url]

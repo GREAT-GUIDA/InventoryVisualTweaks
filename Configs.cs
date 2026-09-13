@@ -1,6 +1,7 @@
 using InventoryVisualTweaks.Content.Inventory;
 using Microsoft.Xna.Framework;
 using System.ComponentModel;
+using Terraria;
 using Terraria.ModLoader.Config;
 
 namespace InventoryVisualTweaks {
@@ -41,6 +42,15 @@ namespace InventoryVisualTweaks {
         [Range(0, 255)]
         [Slider]
         public int OutlineBrightness { get; set; }
+
+        [Header("ItemIconOutlineSettings")]
+        [DefaultValue(0.39f)]
+        [Range(0f, 1f)]
+        [Slider]
+        public float ItemIconOutlineIntensity { get; set; }
+
+        [DefaultValue(-1)]
+        public int DoNotUseItemIconOutlineIfRarityIsLessThan { get; set; }
 
         [DefaultValue(false)]
         public bool EnableCornerFrame { get; set; }
@@ -126,11 +136,6 @@ namespace InventoryVisualTweaks {
         [Slider]
         public float NewItemEffectIntensity { get; set; }
 
-        [DefaultValue(0.39f)]
-        [Range(0f, 1f)]
-        [Slider]
-        public float ItemIconOutlineIntensity { get; set; }
-
         [DefaultValue(true)]
         public bool EnableHotbarRarityName { get; set; }
 
@@ -152,10 +157,38 @@ namespace InventoryVisualTweaks {
 
         [DefaultValue(false)]
         public bool UseCooldownMaskOnAllHotbarSlots { get; set; }
+
+        [DefaultValue(true)]
+        public bool EnableTooltipFade { get; set; }
+
+        [DefaultValue(6)]
+        [Range(1, 30)]
+        [Slider]
+        public int TooltipFadeInDuration { get; set; }
+
+        [DefaultValue(5)]
+        [Range(1, 30)]
+        [Slider]
+        public int TooltipFadeOutDuration { get; set; }
+
+        [DefaultValue(true)]
+        public bool EnableHeldItemTooltipOffsetEase { get; set; }
+
+        [DefaultValue(6)]
+        [Range(1, 30)]
+        [Slider]
+        public int HeldItemTooltipOffsetDuration { get; set; }
     }
 
     public class DrawItemInWorldConfig : ModConfig {
         public override ConfigScope Mode => ConfigScope.ClientSide;
+
+        [DefaultValue(-1)]
+        public int DoNotUseWorldEffectsIfRarityIsLessThan { get; set; }
+
+        public bool MeetsMinRarity(Item item) =>
+            DoNotUseWorldEffectsIfRarityIsLessThan < 0
+            || item.rare >= DoNotUseWorldEffectsIfRarityIsLessThan;
 
         [Header("OutlineSettings")]
         [DefaultValue(true)]
@@ -208,7 +241,7 @@ namespace InventoryVisualTweaks {
         [DefaultValue(100)]
         public int ItemGlowIntensity { get; set; }
 
-        [DefaultValue(ItemGlowStyle.Fancy)]
+        [DefaultValue(ItemGlowStyle.Normal)]
         public ItemGlowStyle ItemGlowStyle { get; set; }
 
         [DefaultValue(true)]

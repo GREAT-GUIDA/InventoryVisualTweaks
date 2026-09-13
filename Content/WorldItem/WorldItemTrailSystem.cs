@@ -53,6 +53,13 @@ namespace InventoryVisualTweaks.Content.WorldItem {
                     continue;
                 }
 
+                if (!config.MeetsMinRarity(item)) {
+                    if (trail != null && !trail.IsDissolving)
+                        trail.BeginDissolve();
+                    _trails[i] = null;
+                    continue;
+                }
+
                 float attachedRarityMultiplier = 1f;
                 float trailRarityMultiplier = 1f;
                 ItemGlowStyle glowStyle = config.ItemGlowStyle;

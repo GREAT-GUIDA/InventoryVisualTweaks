@@ -38,10 +38,6 @@ namespace InventoryVisualTweaks.Content.Inventory {
             float scale,
             float sizeLimit,
             Color environmentColor) {
-            BlendState originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
-            SamplerState originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
-            Main.spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, null, Main.UIScaleMatrix);
-
             if (InventorySlotContextRules.ShouldUseVanillaItemIconOnly(context))
                 return orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
 
@@ -73,7 +69,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 && context != ItemSlot.Context.HotbarItem
                 && !InventorySlotContextRules.IsTransientDisplayContext(context);
 
-            Main.spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, ModAsset.BorderShade.Value, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, ModAsset.BorderShade.Value, Main.UIScaleMatrix);
             ModAsset.BorderShade.Value
                 .SetIntensity(InventorySlotVisualTuning.BorderShadingIntensity)
                 .SetColor(borderColor)
@@ -97,7 +93,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             TryDrawOpenInventoryHotbarHighlight(spriteBatch, screenPositionForItemCenter, interactionConfig);
 
             if (highlightNewItem) {
-                Main.spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, ModAsset.BorderDashLine.Value, Main.UIScaleMatrix);
+                Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, ModAsset.BorderDashLine.Value, Main.UIScaleMatrix);
                 ModAsset.BorderDashLine.Value
                     .SetTime((float)Main.timeForVisualEffects / 30f)
                     .SetProgress(4f)
@@ -116,8 +112,10 @@ namespace InventoryVisualTweaks.Content.Inventory {
                     0f);
             }
 
-            if (!TryComputeItemFrame(item, scale, sizeLimit, out Texture2D spriteCopy, out Rectangle frame, out Vector2 uniformDrawScale))
+            if (!TryComputeItemFrame(item, scale, sizeLimit, out Texture2D spriteCopy, out Rectangle frame, out Vector2 uniformDrawScale)) {
+                Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
                 return orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
+            }
 
             InventorySlotVisualSystem.TryGetActiveState(out InventorySlotVisualState visualState);
             float hoverScale = visualState?.HoverScale ?? 1f;
@@ -153,22 +151,24 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (hoverProgress > 0.001f)
                 DrawHoverShadow(spriteBatch, spriteCopy, frame, itemCenter, itemDrawScale, scale, borderColor.A / 255f, hoverProgress);
 
-            Main.spriteBatch.EndAndBegin(BlendState.NonPremultiplied, originalSamplerState, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.NonPremultiplied, SamplerState.LinearClamp, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
             ModAsset.ShaAfterImage.Value
                 .SetIntensity(1f)
                 .SetColor(borderColor)
                 .Apply();
 
-            if (interactionConfig.ItemIconOutlineIntensity > 0f) {
+            if (borderConfig.ItemIconOutlineIntensity > 0f
+                && (borderConfig.DoNotUseItemIconOutlineIfRarityIsLessThan < 0
+                    || item.rare >= borderConfig.DoNotUseItemIconOutlineIfRarityIsLessThan)) {
                 Color col = Color.White;
-                col.A = (byte)(255f * interactionConfig.ItemIconOutlineIntensity * (borderColor.A / 255f));
+                col.A = (byte)(255f * borderConfig.ItemIconOutlineIntensity * (borderColor.A / 255f));
                 spriteBatch.Draw(spriteCopy, itemCenter + Vector2.UnitX * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
                 spriteBatch.Draw(spriteCopy, itemCenter - Vector2.UnitX * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
                 spriteBatch.Draw(spriteCopy, itemCenter + Vector2.UnitY * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
                 spriteBatch.Draw(spriteCopy, itemCenter - Vector2.UnitY * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
             }
 
-            Main.spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, null, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
 
             float scl = DrawItemIconWithTransform(
                 orig,
@@ -184,13 +184,12 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
             DrawPickupFlash(spriteBatch, spriteCopy, frame, itemCenter, itemDrawScale, pickupFlash);
 
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, originalSamplerState, null, Main.UIScaleMatrix);
-
             if (highlightNewItem)
-                DrawNewItemHighlight(spriteBatch, originalBlendState, originalSamplerState, borderConfig, interactionConfig, borderColor, spriteCopy, frame, itemCenter, itemDrawScale);
+                DrawNewItemHighlight(spriteBatch, borderConfig, interactionConfig, borderColor, spriteCopy, frame, itemCenter, itemDrawScale);
 
             TryDrawUseCooldownMask(spriteBatch, screenPositionForItemCenter, interactionConfig);
 
+            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
             return scl;
         }
 
@@ -243,12 +242,10 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (flashAlpha <= 0.01f)
                 return;
 
-            BlendState blendState = spriteBatch.GraphicsDevice.BlendState;
-            SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[0];
-            spriteBatch.EndAndBegin(BlendState.Additive, samplerState, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
+            spriteBatch.EndAndBegin(BlendState.Additive, SamplerState.LinearClamp, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
             ModAsset.ShaAfterImage.Value.SetIntensity(flashAlpha).SetColor(Color.White).Apply();
             spriteBatch.Draw(texture, center, frame, Color.White.WithAlpha(flashAlpha), 0f, frame.Size() * 0.5f, drawScale, SpriteEffects.None, 0f);
-            spriteBatch.EndAndBegin(BlendState.AlphaBlend, samplerState, null, Main.UIScaleMatrix);
+            spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
         }
 
         private static void DrawHoverShadow(
@@ -282,15 +279,13 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (Math.Abs(squashX - 1f) < 0.001f && Math.Abs(squashY - 1f) < 0.001f)
                 return orig(item, context, spriteBatch, center, scale, sizeLimit, environmentColor);
 
-            BlendState blendState = spriteBatch.GraphicsDevice.BlendState;
-            SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[0];
             Matrix transform = Matrix.CreateTranslation(-center.X, -center.Y, 0f)
                 * Matrix.CreateScale(squashX, squashY, 1f)
                 * Matrix.CreateTranslation(center.X, center.Y, 0f)
                 * Main.UIScaleMatrix;
-            spriteBatch.EndAndBegin(blendState, samplerState, null, transform);
+            spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, transform);
             float result = orig(item, context, spriteBatch, center, scale, sizeLimit, environmentColor);
-            spriteBatch.EndAndBegin(blendState, samplerState, null, Main.UIScaleMatrix);
+            spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
             return result;
         }
 
@@ -502,8 +497,6 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
         private static void DrawNewItemHighlight(
             SpriteBatch spriteBatch,
-            BlendState originalBlendState,
-            SamplerState originalSamplerState,
             InventoryBorderConfig borderConfig,
             InventoryInteractionConfig interactionConfig,
             Color borderColor,
@@ -511,7 +504,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             Rectangle frame,
             Vector2 itemCenter,
             Vector2 itemDrawScale) {
-            Main.spriteBatch.EndAndBegin(BlendState.Additive, originalSamplerState, ModAsset.BorderLuster.Value, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.Additive, SamplerState.LinearClamp, ModAsset.BorderLuster.Value, Main.UIScaleMatrix);
             ModAsset.BorderLuster.Value
                 .SetTime((float)Main.timeForVisualEffects / 100f)
                 .SetFrequency(0.5f)
@@ -539,11 +532,10 @@ namespace InventoryVisualTweaks.Content.Inventory {
             float flareScale = InventorySlotVisualTuning.NewItemFlareScale * Main.inventoryScale / ModAsset.TexItemFlare.Value.Width;
             float flareRotation = (float)Main.timeForVisualEffects * InventorySlotVisualTuning.NewItemFlareRotationSpeed;
 
-            Main.spriteBatch.EndAndBegin(BlendState.Additive, originalSamplerState, null, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.Additive, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
             spriteBatch.DrawCentered(ModAsset.TexItemFlare.Value, itemCenter, flareColor, flareRotation, flareScale);
             spriteBatch.DrawCentered(ModAsset.TexItemFlare.Value, itemCenter, flareColor, -flareRotation, flareScale);
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, originalSamplerState, null, Main.UIScaleMatrix);
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, originalSamplerState, null, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
         }
     }
 }

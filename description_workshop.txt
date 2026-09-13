@@ -1,10 +1,18 @@
 纯客户端的物品视觉优化mod，我懒得写具体加了啥了，看gif吧↓
 
-[img]在此粘贴你的 GIF 图片链接[/img]
+[img]https://i.imgur.com/XeplOd6.gif[/img]
+
+[img]https://i.imgur.com/Z4TgnFI.gif[/img]
+
+[img]https://i.imgur.com/gwmNJgM.gif[/img]
 
 所有效果都完全可开关可调整，如果有哪个细节你想调整而调整不了可以告诉我让我加。
 
 物品边框的颜色与样式可以在设置中调整以及自适应材质包。
+
+
+-----
+
 
 呃对我知道以前也有人做过类似的东西，比如：
 
@@ -26,8 +34,9 @@
 
 事实上，我有一个更大规模的视觉调整mod，但那个mod可能还要很长时间才能做完，我还是先发布这个mod吧。
 
-我的QQ群：1047902679
+[b]我的QQ群[/b]：1047902679
+加群陪我聊天求求你↑↑↑
 
-我的Discord server：https://discord.gg/KV4zUXDpKY
+[b]我的Discord server[/b]：https://discord.gg/KV4zUXDpKY
 
-此mod开源。[url=在此粘贴 GitHub 链接]源码[/url]
+此mod开源。[url=https://github.com/GREAT-GUIDA/InventoryVisualTweaks]源码[/url]

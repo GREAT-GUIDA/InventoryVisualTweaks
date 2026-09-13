@@ -343,6 +343,8 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 if (isMainStack) {
                     c.Remove();
                     c.Emit(OpCodes.Call, replacement);
+                } else {
+                    c.Index++;
                 }
             }
         }

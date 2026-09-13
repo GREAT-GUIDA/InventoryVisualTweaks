@@ -173,11 +173,6 @@ Configs: {
 			Tooltip: 0 disables.
 		}
 
-		ItemIconOutlineIntensity: {
-			Label: Item Icon Outline Intensity
-			Tooltip: 0 disables.
-		}
-
 		EnableHotbarRarityName: {
 			Label: Hotbar Rarity Name Color
 			Tooltip: Colors the selected hotbar item name using item rarity.
@@ -207,10 +202,39 @@ Configs: {
 			Label: Use Cooldown Mask On All Hotbar Slots
 			Tooltip: While an item is in use, apply the cooldown mask to every hotbar slot instead of only the selected one.
 		}
+
+		EnableTooltipFade: {
+			Label: Tooltip Fade
+			Tooltip: Fades the tooltip background and text in and out. Background fade requires vanilla opaque tooltip background.
+		}
+
+		TooltipFadeInDuration: {
+			Label: Tooltip Fade In Duration
+			Tooltip: Frames to fade in. Higher is slower.
+		}
+
+		TooltipFadeOutDuration: {
+			Label: Tooltip Fade Out Duration
+			Tooltip: Frames to fade out. Higher is slower.
+		}
+
+		EnableHeldItemTooltipOffsetEase: {
+			Label: Held Item Tooltip Offset Ease
+			Tooltip: Smoothly shifts tooltip boxes when an item is on the cursor, instead of the vanilla instant 34px jump.
+		}
+
+		HeldItemTooltipOffsetDuration: {
+			Label: Held Item Tooltip Offset Duration
+			Tooltip: Frames to ease the held-item tooltip offset. Higher is slower.
+		}
 	}
 
 	InventoryBorderConfig: {
 		DisplayName: Item Border
+
+		Headers: {
+			ItemIconOutlineSettings: Item Icon Outline
+		}
 
 		EnableBorder: {
 			Label: Enable Border
@@ -257,6 +281,16 @@ Configs: {
 			Tooltip: ""
 		}
 
+		ItemIconOutlineIntensity: {
+			Label: Item Icon Outline Intensity
+			Tooltip: Colored offset pass around the inventory item sprite. 0 disables.
+		}
+
+		DoNotUseItemIconOutlineIfRarityIsLessThan: {
+			Label: Min Rarity For Item Icon Outline
+			Tooltip: -1 disables the rarity filter.
+		}
+
 		EnableCornerFrame: {
 			Label: Corner Frame
 			Tooltip: ""
@@ -280,6 +314,11 @@ Configs: {
 
 	DrawItemInWorldConfig: {
 		DisplayName: World Item Visuals
+
+		DoNotUseWorldEffectsIfRarityIsLessThan: {
+			Label: Min Rarity For World Effects
+			Tooltip: -1 disables the rarity filter.
+		}
 
 		Headers: {
 			OutlineSettings: Outline

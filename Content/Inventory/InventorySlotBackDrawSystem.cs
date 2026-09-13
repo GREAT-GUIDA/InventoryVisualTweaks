@@ -38,10 +38,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 return;
             }
 
-            BlendState originalBlendState = Main.spriteBatch.GraphicsDevice.BlendState;
-            SamplerState originalSamplerState = Main.spriteBatch.GraphicsDevice.SamplerStates[0];
-
-            Main.spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, ModAsset.BorderBackShade.Value, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, ModAsset.BorderBackShade.Value, Main.UIScaleMatrix);
 
             int itemBackColorOpacity;
             Color itemColor = ColorSolver.GetContextColor(inv, context, slot, position, out itemBackColorOpacity);
@@ -85,7 +82,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
             orig(spriteBatch, inv, context, slot, position, lightColor);
 
-            Main.spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, null, Main.UIScaleMatrix);
+            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
             InventorySlotVisualSystem.EndSlotDraw();
         }
     }
