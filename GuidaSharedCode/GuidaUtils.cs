@@ -178,18 +178,15 @@ namespace GuidaSharedCode {
         }
 
         public static float SimplexNoise(Vector2 p) {
-            const float K1 = 0.366025404f;
-            const float K2 = 0.211324865f;
-
-            float s = (p.X + p.Y) * K1;
+            float s = (p.X + p.Y) * 0.366025404f;
             Vector2 i = new Vector2((float)Math.Floor(p.X + s), (float)Math.Floor(p.Y + s));
 
-            float t = (i.X + i.Y) * K2;
+            float t = (i.X + i.Y) * 0.211324865f;
             Vector2 a = p - (i - new Vector2(t));
 
             Vector2 o = a.X > a.Y ? new Vector2(1, 0) : new Vector2(0, 1);
-            Vector2 b = a - o + new Vector2(K2);
-            Vector2 c = a - Vector2.One + new Vector2(2.0f * K2);
+            Vector2 b = a - o + new Vector2(0.211324865f);
+            Vector2 c = a - Vector2.One + new Vector2(2.0f * 0.211324865f);
 
             Vector3 h = new Vector3(
                 Math.Max(0.5f - Vector2.Dot(a, a), 0.0f),

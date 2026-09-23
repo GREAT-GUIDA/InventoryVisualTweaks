@@ -253,7 +253,7 @@ namespace GuidaSharedCode {
 
                 spriteBatch.Draw(glowTexture, screenPos * rate, null,
                     glow.Color * opacity * 0.5f, 0f, origin,
-                    rate * size / glowTexture.Width, SpriteEffects.None, 0f);
+                    rate * size / glowTexture.Width);
             }
 
             spriteBatch.End();

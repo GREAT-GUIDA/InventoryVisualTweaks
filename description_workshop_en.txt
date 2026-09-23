@@ -1,4 +1,4 @@
-A purely client-side item visual tweaks mod. I'm too lazy to write out exactly what it adds—see the GIFs below↓
+A purely client-side item visual tweaks mod. I'm too lazy to write out exactly what it adds, see the GIFs below↓
 
 [img]https://i.imgur.com/XeplOd6.gif[/img]
 
@@ -27,5 +27,6 @@ So I made an integrated item visual tweaks mod to my own taste.
 Actually, I have a larger-scale visual tweaks mod, but that one might still take a long time to finish, so I'm releasing this mod first.
 
 [b]My Discord server[/b]: https://discord.gg/KV4zUXDpKY
+Join and chat with me, please ↑↑↑
 
 [b]This mod is open source.[/b] [url=https://github.com/GREAT-GUIDA/InventoryVisualTweaks]Source code[/url]

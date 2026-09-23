@@ -76,7 +76,7 @@ namespace InventoryVisualTweaks.Content.WorldItem {
                             .SetSourceRect(texture)
                             .Apply();
 
-                        spriteBatch.Draw(texture, position, frame, Color.White.WithAlpha(effectColor.A / 255f), rotation, frame.Size() / 2f, scale, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(texture, position, frame, Color.White.WithAlpha(effectColor.A / 255f), rotation, scale);
                     });
                 }
             }
@@ -100,7 +100,7 @@ namespace InventoryVisualTweaks.Content.WorldItem {
 
             spriteBatch.DrawWithEffect(BlendState.Additive, ModAsset.ShaAfterImage.Value, Main.GameViewMatrix.TransformationMatrix, effect => {
                 effect.SetIntensity(flash).SetColor(Color.White).Apply();
-                spriteBatch.Draw(texture, position, frame, Color.White.WithAlpha(flash), rotation, origin, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, position, frame, Color.White.WithAlpha(flash), rotation, origin, scale);
             });
             spriteBatch.EndAndBeginDefault();
 
@@ -169,7 +169,7 @@ namespace InventoryVisualTweaks.Content.WorldItem {
                 effect.SetIntensity(1f).SetColor(shaderColor).Apply();
 
                 foreach (var offset in offsets)
-                    spriteBatch.Draw(texture, position + offset, frame, drawColor, rotation, origin, scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(texture, position + offset, frame, drawColor, rotation, origin, scale);
             });
         }
     }

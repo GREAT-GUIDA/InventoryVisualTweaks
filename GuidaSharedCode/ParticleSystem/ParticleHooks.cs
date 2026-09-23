@@ -72,11 +72,11 @@ namespace GuidaSharedCode {
         /// </summary>
         BeforeWater,
         /// <summary>
-        /// Before UI.
+        /// Before UI. Positions are screen/UI coordinates and render with <see cref="Main.UIScaleMatrix"/>.
         /// </summary>
         BeforeInterface,
         /// <summary>
-        /// After UI.
+        /// After UI. Positions are screen/UI coordinates and render with <see cref="Main.UIScaleMatrix"/>.
         /// </summary>
         AfterInterface,
         Twist
@@ -573,7 +573,7 @@ namespace GuidaSharedCode {
 
         private void Draw_OnInterface(On_Main.orig_DrawInterface orig, Main self, GameTime gameTime) {
             GetClip(out Rectangle rectangle, out RasterizerState rasterizer);
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
 
             OnDraw_BeforeInterface?.Invoke(ParticleLayer.BeforeInterface);
 
@@ -583,7 +583,7 @@ namespace GuidaSharedCode {
             orig(self, gameTime);
 
             GetClip(out rectangle, out rasterizer);
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.UIScaleMatrix);
 
             OnDraw_AfterInterface?.Invoke(ParticleLayer.AfterInterface);
 

@@ -80,6 +80,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 2f);
 
             ItemLoader.PostDrawTooltipLine(item, tooltipLine);
+            InventoryUiSpriteBatch.Resume();
         }
     }
 }

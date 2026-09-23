@@ -1,3 +1,4 @@
+using InventoryVisualTweaks.Content.Inventory.Compatibility;
 using Terraria;
 using Terraria.UI;
 
@@ -31,16 +32,29 @@ namespace InventoryVisualTweaks.Content.Inventory {
             IsMouseItemContext(context) && item != null && ReferenceEquals(item, Main.mouseItem);
 
         public static bool IsTransientDisplayContext(int context) =>
-            context == ItemSlot.Context.CraftingMaterial;
+            context is ItemSlot.Context.CraftingMaterial
+            or ItemSlot.Context.CreativeInfinite;
 
         public static bool SupportsTransferEffects(int context) =>
             !IsTransientDisplayContext(context);
 
+        public static bool SupportsTransferEffects(int context, Item[] inv) {
+            if (!SupportsTransferEffects(context))
+                return false;
+
+            return !MagicStorageCompatibility.ShouldSuppressTransferMotion(inv);
+        }
+
         public static bool SupportsInventoryVisuals(int context) =>
             !ShouldSkipContext(context);
 
-        public static bool UsesSharedSingleSlotArray(int context) =>
-            context == ItemSlot.Context.TrashItem;
+        public static bool UsesSharedSingleSlotArray(int context, Item[] inv) {
+            if (context != ItemSlot.Context.TrashItem || inv == null || inv.Length != 1)
+                return false;
+
+            Player player = Main.LocalPlayer;
+            return player != null && ReferenceEquals(inv[0], player.trashItem);
+        }
 
         public static int GetVirtualInventoryId(int context) =>
             VirtualInventoryIdBase - context;

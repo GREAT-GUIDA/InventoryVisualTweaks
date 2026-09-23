@@ -35,9 +35,8 @@ namespace InventoryVisualTweaks.Content.WorldItem {
             velocity = Vector2.Zero;
 
             float alphaScale = fancy ? 1f : WorldItemVisualTuning.ItemGlowStyleNormalGlintAlphaScale;
-            _drawColor = WorldItemEffectColorHelper.ForGlowSparkCore(trailColor)
-                .WithAlpha(intensityAlpha, WorldItemVisualTuning.ItemGlowGlintAlpha, alphaScale);
-            alpha = 1f;
+            float intensity = intensityAlpha * WorldItemVisualTuning.ItemGlowGlintAlpha * alphaScale;
+            _drawColor = (WorldItemEffectColorHelper.ForGlowSparkCore(trailColor) with { A = 0 }) * intensity;
         }
 
         public override void AI() {
@@ -57,8 +56,8 @@ namespace InventoryVisualTweaks.Content.WorldItem {
             if (alpha <= 0.01f)
                 return false;
 
-            spriteBatch.EndAndBeginImmediate(BlendState.Additive);
-            spriteBatch.DrawCentered(Texture, GetDrawPosition(), _drawColor.MultiplyAlpha(alpha), scale);
+            spriteBatch.EndAndBeginImmediate(BlendState.AlphaBlend);
+            spriteBatch.DrawCentered(Texture, GetDrawPosition(), _drawColor * alpha, scale);
             spriteBatch.EndAndBeginWorld();
             return false;
         }

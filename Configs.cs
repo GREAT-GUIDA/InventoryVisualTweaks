@@ -43,15 +43,6 @@ namespace InventoryVisualTweaks {
         [Slider]
         public int OutlineBrightness { get; set; }
 
-        [Header("ItemIconOutlineSettings")]
-        [DefaultValue(0.39f)]
-        [Range(0f, 1f)]
-        [Slider]
-        public float ItemIconOutlineIntensity { get; set; }
-
-        [DefaultValue(-1)]
-        public int DoNotUseItemIconOutlineIfRarityIsLessThan { get; set; }
-
         [DefaultValue(false)]
         public bool EnableCornerFrame { get; set; }
 
@@ -69,6 +60,16 @@ namespace InventoryVisualTweaks {
         [Range(0, 10)]
         [Slider]
         public int AbovelineHeight { get; set; }
+
+
+        [Header("ItemIconOutlineSettings")]
+        [DefaultValue(0.39f)]
+        [Range(0f, 1f)]
+        [Slider]
+        public float ItemIconOutlineIntensity { get; set; }
+
+        [DefaultValue(-1)]
+        public int DoNotUseItemIconOutlineIfRarityIsLessThan { get; set; }
 
         public static bool ShouldUseBorderInContext(int context) =>
             InventorySlotContextRules.SupportsInventoryVisuals(context);

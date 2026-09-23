@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,8 @@ namespace GuidaSharedCode {
 
 
     class ScreenTwistSystem : ModSystem{
+        private const float EffectIntensityEpsilon = 0.0001f;
+
         public static RenderTarget2D twistTarget;
         public static RenderTarget2D twistTarget2;
 
@@ -84,8 +86,41 @@ namespace GuidaSharedCode {
             twistTarget2 = new RenderTarget2D(device, width, height, false,
                 SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         }
-        public static void DrawTwist() {
+        public static bool ShouldDrawTwist() {
             if (Main.gameMenu || twistTarget == null || twistTarget2 == null)
+                return false;
+
+            if (HasActivePostEffects())
+                return true;
+
+            return HasActiveTwistParticles();
+        }
+
+        private static bool HasActivePostEffects() =>
+            UBloomIntensity > EffectIntensityEpsilon
+            || ULerpIntensity > EffectIntensityEpsilon
+            || URadialBlurIntensity > EffectIntensityEpsilon;
+
+        private static bool HasActiveTwistParticles() {
+            if (ParticleManager.Instance?.particlesByLayer == null)
+                return false;
+
+            if (!ParticleManager.Instance.particlesByLayer.TryGetValue(ParticleLayer.Twist, out List<Particle> particles)
+                || particles == null
+                || particles.Count == 0) {
+                return false;
+            }
+
+            for (int i = 0; i < particles.Count; i++) {
+                if (particles[i] is TwistCircleParticle twist && twist.image_alpha > EffectIntensityEpsilon)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static void DrawTwist() {
+            if (!ShouldDrawTwist())
                 return;
 
             if (Main.screenTarget.RenderTargetUsage != RenderTargetUsage.PreserveContents)
@@ -115,15 +150,19 @@ namespace GuidaSharedCode {
             ModAsset.ShaTwistImage.Value.CurrentTechnique.Passes["P0"].Apply();
 
             if (ParticleManager.Instance.particlesByLayer.TryGetValue(ParticleLayer.Twist, out List<Particle> particles)) {
-                foreach (var particle in particles) {
-                    var texture = ModAsset.TexTwistCircle.Value;
-                    var twistCircle = particle as TwistCircleParticle;
+                Texture2D texture = ModAsset.TexTwistCircle.Value;
+                Vector2 origin = new Vector2(texture.Width, texture.Height) * 0.5f;
+
+                for (int i = 0; i < particles.Count; i++) {
+                    Particle particle = particles[i];
+                    if (particle is not TwistCircleParticle twistCircle || twistCircle.image_alpha <= EffectIntensityEpsilon)
+                        continue;
+
                     float size = twistCircle.image_scale;
                     float opacity = twistCircle.image_alpha * 0.5f;
-                    Vector2 origin = new Vector2(texture.Width, texture.Height) * 0.5f;
 
                     spriteBatch.Draw(texture, particle.position - Main.screenPosition, null,
-                        Color.White * opacity, 0f, origin, size, SpriteEffects.None, 0f);
+                        Color.White * opacity, 0f, origin, size);
                 }
             }
             spriteBatch.End();

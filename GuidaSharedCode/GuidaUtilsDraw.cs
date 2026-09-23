@@ -35,8 +35,48 @@ public static class SpriteBatchUtils {
         spriteBatch.Begin(default, BlendState.NonPremultiplied, SamplerState.PointClamp, default, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
     }
     public static void EndAndBeginAdd(this SpriteBatch spriteBatch) {
+        spriteBatch.EndAndBeginAdd(Main.GameViewMatrix.TransformationMatrix);
+    }
+
+    public static void EndAndBeginAdd(this SpriteBatch spriteBatch, Matrix transform) {
         spriteBatch.End();
-        spriteBatch.Begin(default, BlendState.Additive, SamplerState.PointClamp, default, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+        spriteBatch.Begin(default, BlendState.Additive, SamplerState.PointClamp, default, Main.Rasterizer, null, transform);
+    }
+
+    public static void EndAndBeginUI(this SpriteBatch spriteBatch, BlendState bs = null, SamplerState ss = null) {
+        spriteBatch.End();
+        spriteBatch.Begin(
+            SpriteSortMode.Deferred,
+            bs ?? BlendState.AlphaBlend,
+            ss ?? Main.DefaultSamplerState,
+            DepthStencilState.None,
+            Main.Rasterizer,
+            null,
+            Main.UIScaleMatrix);
+    }
+
+    public static void EndAndBeginUIImmediate(this SpriteBatch spriteBatch, Effect shader = null, SamplerState ss = null) {
+        spriteBatch.End();
+        spriteBatch.Begin(
+            SpriteSortMode.Immediate,
+            BlendState.AlphaBlend,
+            ss ?? SamplerState.LinearClamp,
+            DepthStencilState.None,
+            RasterizerState.CullCounterClockwise,
+            shader,
+            Main.UIScaleMatrix);
+    }
+
+    public static void EndAndBeginWorldImmediate(this SpriteBatch spriteBatch, Effect shader = null) {
+        spriteBatch.End();
+        spriteBatch.Begin(
+            SpriteSortMode.Immediate,
+            BlendState.AlphaBlend,
+            Main.DefaultSamplerState,
+            DepthStencilState.None,
+            RasterizerState.CullCounterClockwise,
+            shader,
+            Main.GameViewMatrix.TransformationMatrix);
     }
     public static void EndAndBeginDefault(this SpriteBatch spriteBatch) {
         spriteBatch.End();
@@ -91,17 +131,15 @@ public static class SpriteBatchUtils {
             Main.GameViewMatrix.TransformationMatrix);
     }
 
-    public static void DrawCentered(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float scale = 1f) {
-        spriteBatch.Draw(texture, position, null, color, 0f, texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
-    }
+    public static void DrawCentered(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float scale = 1f) =>
+        spriteBatch.Draw(texture, position, color, scale);
 
-    public static void DrawCentered(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, Vector2 scale) {
-        spriteBatch.Draw(texture, position, null, color, 0f, texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
-    }
+    public static void DrawCentered(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, Vector2 scale) =>
+        spriteBatch.Draw(texture, position, color, 0f, scale);
 
-    public static void DrawCentered(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float rotation, float scale) {
-        spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
-    }
+    public static void DrawCentered(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float rotation, float scale) =>
+        spriteBatch.Draw(texture, position, color, rotation, scale);
+
     public static void DrawWithEffect(
         this SpriteBatch spriteBatch,
         BlendState blendState,
@@ -116,6 +154,65 @@ public static class SpriteBatchUtils {
         draw(effect);
         spriteBatch.EndAndBegin(originalBlendState, originalSamplerState, null, transform);
     }
+}
+
+public static class SpriteBatchDrawExtensions {
+    static Vector2 OriginCenter(Texture2D texture, Rectangle? source) =>
+        source is { } r ? r.Size() * 0.5f : texture.Size() * 0.5f;
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float scale = 1f) =>
+        spriteBatch.Draw(texture, position, null, color, 0f, texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float rotation, float scale) =>
+        spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Color color, float rotation, Vector2 scale) =>
+        spriteBatch.Draw(texture, position, null, color, rotation, texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, float scale) =>
+        spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, OriginCenter(texture, sourceRectangle), scale, SpriteEffects.None, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale) =>
+        spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale) =>
+        spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects) =>
+        spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effects, 0f);
+
+    public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects) =>
+        spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effects, 0f);
+
+    public static void DrawWorld(this SpriteBatch spriteBatch, Texture2D texture, Vector2 worldPosition, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale) =>
+        spriteBatch.Draw(texture, worldPosition - Main.screenPosition, sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
+
+    public static void DrawWorld(this SpriteBatch spriteBatch, Texture2D texture, Vector2 worldPosition, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale) =>
+        spriteBatch.Draw(texture, worldPosition - Main.screenPosition, sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Color color, float rotation, float scale) =>
+        Main.EntitySpriteDraw(texture, screenPosition, null, color, rotation, texture.Size() * 0.5f, scale, SpriteEffects.None);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Color color, float rotation, Vector2 origin, float scale) =>
+        Main.EntitySpriteDraw(texture, screenPosition, null, color, rotation, origin, scale, SpriteEffects.None);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Color color, float rotation, Vector2 origin, Vector2 scale) =>
+        Main.EntitySpriteDraw(texture, screenPosition, null, color, rotation, origin, scale, SpriteEffects.None);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale) =>
+        Main.EntitySpriteDraw(texture, screenPosition, sourceRectangle, color, rotation, origin, scale, SpriteEffects.None);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale) =>
+        Main.EntitySpriteDraw(texture, screenPosition, sourceRectangle, color, rotation, origin, scale, SpriteEffects.None);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects) =>
+        Main.EntitySpriteDraw(texture, screenPosition, null, color, rotation, origin, scale, effects, 0f);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects) =>
+        Main.EntitySpriteDraw(texture, screenPosition, sourceRectangle, color, rotation, origin, scale, effects, 0f);
+
+    public static void DrawEntity(this SpriteBatch _, Texture2D texture, Vector2 screenPosition, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects) =>
+        Main.EntitySpriteDraw(texture, screenPosition, null, color, rotation, origin, scale, effects, 0f);
 }
 
 public static class ShaderUtils {

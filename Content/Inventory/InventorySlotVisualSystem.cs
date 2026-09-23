@@ -78,7 +78,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (InventorySlotContextRules.IsTransientDisplayContext(context))
                 return new InventorySlotKey(CraftingInventoryId, HashScreenPosition(screenPosition));
 
-            if (InventorySlotContextRules.UsesSharedSingleSlotArray(context))
+            if (InventorySlotContextRules.UsesSharedSingleSlotArray(context, inv))
                 return new InventorySlotKey(InventorySlotContextRules.GetVirtualInventoryId(context), 0);
 
             return new InventorySlotKey(inv, slot);
@@ -172,9 +172,14 @@ namespace InventoryVisualTweaks.Content.Inventory {
         private static Vector2 PreviousMouseItemDrawCenter;
 
         public override void Load() {
+            Compatibility.MagicStorageCompatibility.Load();
             IL_ItemSlot.Draw_SpriteBatch_ItemArray_int_int_Vector2_Color += PatchItemSlotDrawStackOffset;
             On_ItemSlot.PickupItemIntoMouse += OnPickupItemIntoMouse;
             On_ItemSlot.LeftClick_ItemArray_int_int += OnLeftClick;
+        }
+
+        public override void Unload() {
+            Compatibility.MagicStorageCompatibility.Unload();
         }
 
         public override void OnWorldLoad() {
@@ -225,8 +230,8 @@ namespace InventoryVisualTweaks.Content.Inventory {
         public static bool ShouldSkipContext(int context) =>
             InventorySlotContextRules.ShouldSkipContext(context);
 
-        public static bool SupportsTransferEffects(int context) =>
-            InventorySlotContextRules.SupportsTransferEffects(context);
+        public static bool SupportsTransferEffects(int context, Item[] inv) =>
+            InventorySlotContextRules.SupportsTransferEffects(context, inv);
 
         internal static Vector2 GetHoverItemOffset(float hoverProgress, float hoverScaleAmount) {
             if (hoverProgress <= 0.001f || hoverScaleAmount <= 1.001f)
@@ -250,7 +255,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
         }
 
         private static void OnLeftClick(On_ItemSlot.orig_LeftClick_ItemArray_int_int orig, Item[] inv, int context, int slot) {
-            if (inv == null || slot < 0 || slot >= inv.Length || ShouldSkipContext(context) || !SupportsTransferEffects(context)) {
+            if (inv == null || slot < 0 || slot >= inv.Length || ShouldSkipContext(context) || !SupportsTransferEffects(context, inv)) {
                 orig(inv, context, slot);
                 return;
             }
@@ -258,7 +263,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             Item mouseBefore = Main.mouseItem != null && !Main.mouseItem.IsAir ? Main.mouseItem : null;
             int mouseStackBefore = mouseBefore?.stack ?? 0;
             Item slotItemBefore = inv[slot] != null && !inv[slot].IsAir ? inv[slot] : null;
-            Vector2 mouseOrigin = PreviousMouseItemDrawCenter;
+            Vector2 mouseOrigin = GetMouseItemPlaceOrigin();
             InventorySlotKey slotKey = InventorySlotKey.ForSlot(inv, context, slot);
 
             orig(inv, context, slot);
@@ -267,6 +272,13 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 && Main.mouseItem != null && !Main.mouseItem.IsAir
                 && ReferenceEquals(Main.mouseItem, slotItemBefore)) {
                 TryStartMouseItemPickupMotionFromSlot(slotKey);
+
+                if (mouseBefore != null && !mouseBefore.IsAir) {
+                    Item placedFromMouse = inv[slot];
+                    if (placedFromMouse != null && !placedFromMouse.IsAir && ReferenceEquals(placedFromMouse, mouseBefore))
+                        TryQueuePlacedItemMotionFromMouse(placedFromMouse, slotKey, mouseOrigin);
+                }
+
                 return;
             }
 
@@ -286,20 +298,12 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (!placedItem && !stackedFromMouse)
                 return;
 
-            if (mouseOrigin == Vector2.Zero)
-                mouseOrigin = MouseItemDrawCenterThisFrame;
-
-            if (mouseOrigin == Vector2.Zero)
-                return;
-
-            InventorySlotVisualState state = GetOrCreateState(slotKey);
-            if (!TryStartMousePlaceMotion(slotItem, slotKey, null, mouseOrigin, state))
-                PendingMousePlaceOrigins[slotItem] = mouseOrigin;
+            TryQueuePlacedItemMotionFromMouse(slotItem, slotKey, mouseOrigin);
         }
 
         private static void OnPickupItemIntoMouse(On_ItemSlot.orig_PickupItemIntoMouse orig, Item[] inv, int context, int slot, Player player) {
             InventorySlotKey? slotKey = null;
-            if (!ShouldSkipContext(context) && inv != null && slot >= 0 && slot < inv.Length && SupportsTransferEffects(context))
+            if (!ShouldSkipContext(context) && inv != null && slot >= 0 && slot < inv.Length && SupportsTransferEffects(context, inv))
                 slotKey = InventorySlotKey.ForSlot(inv, context, slot);
 
             orig(inv, context, slot, player);
@@ -523,7 +527,8 @@ namespace InventoryVisualTweaks.Content.Inventory {
             InventorySlotKey slotKey = InventorySlotKey.ForSlot(inv, context, slot, slotPosition);
             InventorySlotVisualState state = GetOrCreateState(slotKey);
 
-            if (SupportsTransferEffects(context) && !InventorySlotContextRules.UsesSharedSingleSlotArray(context))
+            bool transferEffects = SupportsTransferEffects(context, inv);
+            if (transferEffects && !InventorySlotContextRules.UsesSharedSingleSlotArray(context, inv))
                 DrawnInventoriesThisFrame.Add(inv);
 
             DrawnSlotsThisFrame.Add(slotKey);
@@ -545,41 +550,44 @@ namespace InventoryVisualTweaks.Content.Inventory {
             Item item = inv[slot];
             Vector2 visualOffset = Vector2.Zero;
             bool hasActiveMotion = false;
+            bool trackItemMotion = transferEffects;
             if (item != null && !item.IsAir) {
-                ItemLocation currentLocation = new(slotKey.InvId, slotKey.Slot);
+                if (trackItemMotion) {
+                    ItemLocation currentLocation = new(slotKey.InvId, slotKey.Slot);
 
-                if (!ItemMotionStates.ContainsKey(item)) {
-                    if (PendingMousePlaceOrigins.TryGetValue(item, out Vector2 mouseItemCenter)) {
-                        Vector2 slotIconCenter = slotPosition + GetSlotItemCenterOffset();
-                        if (TryStartMousePlaceMotion(item, slotKey, slotPosition, mouseItemCenter, state))
-                            PendingMousePlaceOrigins.Remove(item);
-                    } else if (SupportsTransferEffects(context)) {
-                        if (TryGetTransferSourcePosition(slotKey, out Vector2 sourcePos)) {
-                            TryStartItemMotion(item, sourcePos - slotPosition);
+                    if (!ItemMotionStates.ContainsKey(item)) {
+                        if (PendingMousePlaceOrigins.TryGetValue(item, out Vector2 mouseItemCenter)) {
+                            Vector2 slotIconCenter = slotPosition + GetSlotItemCenterOffset();
+                            if (TryStartMousePlaceMotion(item, slotKey, slotPosition, mouseItemCenter, state))
+                                PendingMousePlaceOrigins.Remove(item);
                         } else {
-                            bool wasTracked = ItemPreviousLocations.TryGetValue(item, out ItemLocation previousLocation);
-                            bool relocated = wasTracked && !previousLocation.Equals(currentLocation);
+                            if (TryGetTransferSourcePosition(slotKey, out Vector2 sourcePos)) {
+                                TryStartItemMotion(item, sourcePos - slotPosition);
+                            } else {
+                                bool wasTracked = ItemPreviousLocations.TryGetValue(item, out ItemLocation previousLocation);
+                                bool relocated = wasTracked && !previousLocation.Equals(currentLocation);
 
-                            if (relocated
-                                && ItemMotionTracks.TryGetValue(item, out ItemMotionTrack track)
-                                && track.HasPosition) {
-                                TryStartItemMotion(item, track.LastVisualPos - slotPosition);
-                            } else if (!wasTracked
-                                && LastDrawnSlots.Contains(slotKey)
-                                && TryFindTransferSourceBySlotState(item, slotKey, out Vector2 drawSourcePos)) {
-                                TryStartItemMotion(item, drawSourcePos - slotPosition);
+                                if (relocated
+                                    && ItemMotionTracks.TryGetValue(item, out ItemMotionTrack track)
+                                    && track.HasPosition) {
+                                    TryStartItemMotion(item, track.LastVisualPos - slotPosition);
+                                } else if (!wasTracked
+                                    && LastDrawnSlots.Contains(slotKey)
+                                    && TryFindTransferSourceBySlotState(item, slotKey, out Vector2 drawSourcePos)) {
+                                    TryStartItemMotion(item, drawSourcePos - slotPosition);
+                                }
                             }
                         }
                     }
+
+                    visualOffset = GetMotionOffset(item);
+                    hasActiveMotion = ItemMotionStates.ContainsKey(item);
+
+                    ItemMotionTracks[item] = new ItemMotionTrack {
+                        LastVisualPos = slotPosition + visualOffset,
+                        HasPosition = true
+                    };
                 }
-
-                visualOffset = GetMotionOffset(item);
-                hasActiveMotion = ItemMotionStates.ContainsKey(item);
-
-                ItemMotionTracks[item] = new ItemMotionTrack {
-                    LastVisualPos = slotPosition + visualOffset,
-                    HasPosition = true
-                };
 
                 SlotVisualPositions[slotKey] = slotPosition + visualOffset;
                 state.Seeded = true;
@@ -809,6 +817,23 @@ namespace InventoryVisualTweaks.Content.Inventory {
             return false;
         }
 
+        private static Vector2 GetMouseItemPlaceOrigin() {
+            if (MouseItemDrawCenterThisFrame != Vector2.Zero)
+                return MouseItemDrawCenterThisFrame;
+
+            return PreviousMouseItemDrawCenter;
+        }
+
+        private static void TryQueuePlacedItemMotionFromMouse(Item placedItem, InventorySlotKey slotKey, Vector2 mouseOrigin) {
+            if (mouseOrigin == Vector2.Zero)
+                return;
+
+            PendingTransferTargets.Remove(slotKey);
+            InventorySlotVisualState state = GetOrCreateState(slotKey);
+            if (!TryStartMousePlaceMotion(placedItem, slotKey, null, mouseOrigin, state))
+                PendingMousePlaceOrigins[placedItem] = mouseOrigin;
+        }
+
         private static bool TryStartMousePlaceMotion(Item item, InventorySlotKey slotKey, Vector2? slotPosition, Vector2 mouseOrigin, InventorySlotVisualState flashState) {
             if (mouseOrigin == Vector2.Zero)
                 return false;
@@ -816,7 +841,8 @@ namespace InventoryVisualTweaks.Content.Inventory {
             Vector2 slotIconCenter;
             if (slotPosition.HasValue)
                 slotIconCenter = slotPosition.Value + GetSlotItemCenterOffset();
-            else if (!TryResolveSlotIconCenter(slotKey, out slotIconCenter))
+            else if (!TryGetRecordedSlotItemIconCenter(slotKey, out slotIconCenter)
+                && !TryResolveSlotIconCenter(slotKey, out slotIconCenter))
                 return false;
 
             return TryStartItemMotion(item, mouseOrigin - slotIconCenter, flashState);

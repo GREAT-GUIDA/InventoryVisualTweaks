@@ -196,14 +196,17 @@ namespace GuidaSharedCode {
         }
 
         protected virtual bool IsOnScreen() {
-            Vector2 screenPos = position - Main.screenPosition;
             float margin = Math.Max(width, height) * scale + 50f;
+            Vector2 screenPos = UsesUiCoordinates ? position : position - Main.screenPosition;
 
             return screenPos.X > -margin &&
                    screenPos.X < Main.screenWidth + margin &&
                    screenPos.Y > -margin &&
                    screenPos.Y < Main.screenHeight + margin;
         }
+
+        protected bool UsesUiCoordinates =>
+            drawLayer == ParticleLayer.BeforeInterface || drawLayer == ParticleLayer.AfterInterface;
 
         protected virtual bool DoTileCollision() {
             if (!tileCollide) return false;
@@ -419,17 +422,46 @@ namespace GuidaSharedCode {
             return particlesByLayer.Values.SelectMany(list => list);
         }
 
+        public void KillParticlesOfType<T>() where T : Particle {
+            for (int i = particlesToAdd.Count - 1; i >= 0; i--) {
+                if (particlesToAdd[i] is T) {
+                    particlesToAdd[i].Kill();
+                    particlesToAdd.RemoveAt(i);
+                }
+            }
+
+            foreach (List<Particle> particles in particlesByLayer.Values) {
+                for (int i = particles.Count - 1; i >= 0; i--) {
+                    if (particles[i] is T) {
+                        particles[i].Kill();
+                        particles.RemoveAt(i);
+                    }
+                }
+            }
+
+            RecalculateParticleCount();
+        }
+
         /// <summary>
         /// Updates all particles in the system.
         /// </summary>
-        private void UpdateParticles() {
-            // Add pending particles
-            foreach (var particle in particlesToAdd) {
+        private void FlushPendingParticles(ParticleLayer? layer = null) {
+            for (int i = particlesToAdd.Count - 1; i >= 0; i--) {
+                Particle particle = particlesToAdd[i];
+                if (layer.HasValue && particle.drawLayer != layer.Value)
+                    continue;
+
                 if (particlesByLayer.TryGetValue(particle.drawLayer, out List<Particle> layerList)) {
                     layerList.Add(particle);
+                    particlesToAdd.RemoveAt(i);
                 }
             }
-            particlesToAdd.Clear();
+
+            RecalculateParticleCount();
+        }
+
+        private void UpdateParticles() {
+            FlushPendingParticles();
             // Update particles in each layer
             foreach (var kvp in particlesByLayer) {
                 var particles = kvp.Value;
@@ -465,6 +497,9 @@ namespace GuidaSharedCode {
         /// Renders particles for the specified layer.
         /// </summary>
         private void Render(ParticleLayer layer) {
+            if (layer == ParticleLayer.BeforeInterface || layer == ParticleLayer.AfterInterface)
+                FlushPendingParticles(layer);
+
             if (!particlesByLayer.TryGetValue(layer, out List<Particle> particles)) return;
             if (particles.Count == 0) return;
 

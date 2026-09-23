@@ -38,7 +38,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 return;
             }
 
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, ModAsset.BorderBackShade.Value, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.BeginPass(BlendState.AlphaBlend, ModAsset.BorderBackShade.Value, Main.UIScaleMatrix);
 
             int itemBackColorOpacity;
             Color itemColor = ColorSolver.GetContextColor(inv, context, slot, position, out itemBackColorOpacity);
@@ -82,7 +82,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
             orig(spriteBatch, inv, context, slot, position, lightColor);
 
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.Resume();
             InventorySlotVisualSystem.EndSlotDraw();
         }
     }

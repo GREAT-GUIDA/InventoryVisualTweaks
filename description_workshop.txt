@@ -1,4 +1,4 @@
-���ͻ��˵���Ʒ�Ӿ��Ż�mod��������д�������ɶ�ˣ���gif�ɡ�
+纯客户端的物品视觉优化mod，我懒得写具体加了啥了，看gif吧↓
 
 [img]https://i.imgur.com/XeplOd6.gif[/img]
 
@@ -6,15 +6,15 @@
 
 [img]https://i.imgur.com/gwmNJgM.gif[/img]
 
-����Ч������ȫ�ɿ��ؿɵ�����������ĸ�ϸ������������������˿��Ը��������Ҽӡ�
+所有效果都完全可开关可调整，如果有哪个细节你想调整而调整不了可以告诉我让我加。
 
-��Ʒ�߿����ɫ����ʽ�����������е����Լ�����Ӧ���ʰ���
+物品边框的颜色与样式可以在设置中调整以及自适应材质包。
 
 
 -----
 
 
-������֪����ǰҲ�����������ƵĶ��������磺
+呃对我知道以前也有人做过类似的东西，比如：
 
 [list]
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2763158325]ArmamentDisplay[/url]
@@ -26,17 +26,17 @@
 [*][url=https://steamcommunity.com/sharedfiles/filedetails/?id=2887468886]Better Rarity Borders[/url]
 [/list]
 
-������ȷʵ�ο�������һЩЧ�������������mod��Ҫ����Ϊ�Ҳ���һ�ο�һ����ɢ���Ӿ�mod���������ǵ���һ��۸�Ҳ��ͳһ��
+而且我确实参考过其中一些效果。但我做这个mod主要是因为我不想一次开一堆零散的视觉mod，而且它们叠在一起观感也不统一。
 
-�����еĺܶ�Ҳ�����˲���Ҫ�����ݣ��еĲ��Ǵ��ͻ��ˣ��е�ȱ�����ã�Naka's Inventory Tweaks����������ÿ������modʱ���ˡ�
+它们中的很多也增加了不必要的内容，有的不是纯客户端，有的缺少配置，Naka's Inventory Tweaks甚至会在我每次重载mod时闪退。
 
-�����ҲŰ������Լ���ϲ������һ����Ʒ�Ӿ��Ż�������mod��
+所以我才按照我自己的喜好做了一个物品视觉优化的整合mod。
 
-��ʵ�ϣ�����һ�������ģ���Ӿ�����mod�����Ǹ�mod���ܻ�Ҫ�ܳ�ʱ��������꣬�һ����ȷ������mod�ɡ�
+事实上，我有一个更大规模的视觉调整mod，但那个mod可能还要很长时间才能做完，我还是先发布这个mod吧。
 
-[b]�ҵ�QQȺ[/b]��1047902679
-��Ⱥ�������������������
+[b]我的QQ群[/b]：1047902679
+加群陪我聊天求求你↑↑↑
 
-[b]�ҵ�Discord server[/b]��https://discord.gg/KV4zUXDpKY
+[b]我的Discord server[/b]：https://discord.gg/KV4zUXDpKY
 
-��mod��Դ��[url=https://github.com/GREAT-GUIDA/InventoryVisualTweaks]Դ��[/url]
+此mod开源。[url=https://github.com/GREAT-GUIDA/InventoryVisualTweaks]源码[/url]

@@ -69,7 +69,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 && context != ItemSlot.Context.HotbarItem
                 && !InventorySlotContextRules.IsTransientDisplayContext(context);
 
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, ModAsset.BorderShade.Value, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.BeginPass(BlendState.AlphaBlend, ModAsset.BorderShade.Value, Main.UIScaleMatrix);
             ModAsset.BorderShade.Value
                 .SetIntensity(InventorySlotVisualTuning.BorderShadingIntensity)
                 .SetColor(borderColor)
@@ -93,7 +93,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             TryDrawOpenInventoryHotbarHighlight(spriteBatch, screenPositionForItemCenter, interactionConfig);
 
             if (highlightNewItem) {
-                Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, ModAsset.BorderDashLine.Value, Main.UIScaleMatrix);
+                InventoryUiSpriteBatch.BeginPass(BlendState.AlphaBlend, ModAsset.BorderDashLine.Value, Main.UIScaleMatrix);
                 ModAsset.BorderDashLine.Value
                     .SetTime((float)Main.timeForVisualEffects / 30f)
                     .SetProgress(4f)
@@ -113,7 +113,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             }
 
             if (!TryComputeItemFrame(item, scale, sizeLimit, out Texture2D spriteCopy, out Rectangle frame, out Vector2 uniformDrawScale)) {
-                Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+                InventoryUiSpriteBatch.Resume();
                 return orig(item, context, spriteBatch, screenPositionForItemCenter, scale, sizeLimit, environmentColor);
             }
 
@@ -151,7 +151,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (hoverProgress > 0.001f)
                 DrawHoverShadow(spriteBatch, spriteCopy, frame, itemCenter, itemDrawScale, scale, borderColor.A / 255f, hoverProgress);
 
-            Main.spriteBatch.EndAndBegin(BlendState.NonPremultiplied, SamplerState.LinearClamp, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.BeginPass(BlendState.NonPremultiplied, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
             ModAsset.ShaAfterImage.Value
                 .SetIntensity(1f)
                 .SetColor(borderColor)
@@ -162,13 +162,13 @@ namespace InventoryVisualTweaks.Content.Inventory {
                     || item.rare >= borderConfig.DoNotUseItemIconOutlineIfRarityIsLessThan)) {
                 Color col = Color.White;
                 col.A = (byte)(255f * borderConfig.ItemIconOutlineIntensity * (borderColor.A / 255f));
-                spriteBatch.Draw(spriteCopy, itemCenter + Vector2.UnitX * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
-                spriteBatch.Draw(spriteCopy, itemCenter - Vector2.UnitX * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
-                spriteBatch.Draw(spriteCopy, itemCenter + Vector2.UnitY * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
-                spriteBatch.Draw(spriteCopy, itemCenter - Vector2.UnitY * 2 * scale, frame, col, 0f, frame.Size() * 0.5f, itemDrawScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(spriteCopy, itemCenter + Vector2.UnitX * 2 * scale, frame, col, 0f, itemDrawScale);
+                spriteBatch.Draw(spriteCopy, itemCenter - Vector2.UnitX * 2 * scale, frame, col, 0f, itemDrawScale);
+                spriteBatch.Draw(spriteCopy, itemCenter + Vector2.UnitY * 2 * scale, frame, col, 0f, itemDrawScale);
+                spriteBatch.Draw(spriteCopy, itemCenter - Vector2.UnitY * 2 * scale, frame, col, 0f, itemDrawScale);
             }
 
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.Resume();
 
             float scl = DrawItemIconWithTransform(
                 orig,
@@ -189,7 +189,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
             TryDrawUseCooldownMask(spriteBatch, screenPositionForItemCenter, interactionConfig);
 
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.Resume();
             return scl;
         }
 
@@ -229,7 +229,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
             Color ghostColor = environmentColor * alpha;
             ghostColor.A = (byte)(ghostColor.A * alpha);
-            spriteBatch.Draw(texture, center, frame, ghostColor, 0f, frame.Size() * 0.5f, drawScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, center, frame, ghostColor, 0f, drawScale);
         }
 
         private static void DrawPickupFlash(
@@ -242,10 +242,10 @@ namespace InventoryVisualTweaks.Content.Inventory {
             if (flashAlpha <= 0.01f)
                 return;
 
-            spriteBatch.EndAndBegin(BlendState.Additive, SamplerState.LinearClamp, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.BeginPass(BlendState.Additive, ModAsset.ShaAfterImage.Value, Main.UIScaleMatrix);
             ModAsset.ShaAfterImage.Value.SetIntensity(flashAlpha).SetColor(Color.White).Apply();
-            spriteBatch.Draw(texture, center, frame, Color.White.WithAlpha(flashAlpha), 0f, frame.Size() * 0.5f, drawScale, SpriteEffects.None, 0f);
-            spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            spriteBatch.Draw(texture, center, frame, Color.White.WithAlpha(flashAlpha), 0f, drawScale);
+            InventoryUiSpriteBatch.Resume();
         }
 
         private static void DrawHoverShadow(
@@ -262,7 +262,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
 
             Vector2 shadowOffset = InventorySlotVisualTuning.HoverShadowOffset * iconScale * hoverProgress;
             Color shadowColor = Color.Black.WithAlpha(InventorySlotVisualTuning.HoverShadowAlpha * colorAlpha * hoverProgress);
-            spriteBatch.Draw(texture, center + shadowOffset, frame, shadowColor, 0f, frame.Size() * 0.5f, drawScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, center + shadowOffset, frame, shadowColor, 0f, drawScale);
         }
 
         private static float DrawItemIconWithTransform(
@@ -283,9 +283,9 @@ namespace InventoryVisualTweaks.Content.Inventory {
                 * Matrix.CreateScale(squashX, squashY, 1f)
                 * Matrix.CreateTranslation(center.X, center.Y, 0f)
                 * Main.UIScaleMatrix;
-            spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, transform);
+            InventoryUiSpriteBatch.Resume(transform);
             float result = orig(item, context, spriteBatch, center, scale, sizeLimit, environmentColor);
-            spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.Resume();
             return result;
         }
 
@@ -504,7 +504,7 @@ namespace InventoryVisualTweaks.Content.Inventory {
             Rectangle frame,
             Vector2 itemCenter,
             Vector2 itemDrawScale) {
-            Main.spriteBatch.EndAndBegin(BlendState.Additive, SamplerState.LinearClamp, ModAsset.BorderLuster.Value, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.BeginPass(BlendState.Additive, ModAsset.BorderLuster.Value, Main.UIScaleMatrix);
             ModAsset.BorderLuster.Value
                 .SetTime((float)Main.timeForVisualEffects / 100f)
                 .SetFrequency(0.5f)
@@ -532,10 +532,10 @@ namespace InventoryVisualTweaks.Content.Inventory {
             float flareScale = InventorySlotVisualTuning.NewItemFlareScale * Main.inventoryScale / ModAsset.TexItemFlare.Value.Width;
             float flareRotation = (float)Main.timeForVisualEffects * InventorySlotVisualTuning.NewItemFlareRotationSpeed;
 
-            Main.spriteBatch.EndAndBegin(BlendState.Additive, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.BeginPass(BlendState.Additive, null, Main.UIScaleMatrix);
             spriteBatch.DrawCentered(ModAsset.TexItemFlare.Value, itemCenter, flareColor, flareRotation, flareScale);
             spriteBatch.DrawCentered(ModAsset.TexItemFlare.Value, itemCenter, flareColor, -flareRotation, flareScale);
-            Main.spriteBatch.EndAndBegin(BlendState.AlphaBlend, SamplerState.LinearClamp, null, Main.UIScaleMatrix);
+            InventoryUiSpriteBatch.Resume();
         }
     }
 }
